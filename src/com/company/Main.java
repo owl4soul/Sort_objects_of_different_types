@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class Main {
 
 	public static void main(String[] args) {
-		Object[] unsortedTestData = new Object[]{"two", 0, 2, "ten", 1, "zero", 10, 3, "one"};
+		Object[] unsortedTestData = new Object[]{"two", new Object(), new Object(), 0, new Object(), 2, "ten", new Object(), 1, "zero", 10, 3, new Object(), "one"};
 		Object[] sortedResult = sortByIterationAndWrapper(unsortedTestData);
 
 		for (Object o : sortedResult) {
