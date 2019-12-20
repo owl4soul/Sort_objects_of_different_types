@@ -12,7 +12,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		Object[] unsortedTestData = new Object[]{"two", new Object(), new Object(), 0, new Object(), 2, "ten", new Object(), 1, "zero", 10, 3, new Object(), "one"};
-		Object[] sortedResult = sortByIterationAndWrapper(unsortedTestData);
+		Object[] sortedResult = sortWithCustomComparator(unsortedTestData);
 
 		for (Object o : sortedResult) {
 			System.out.println(o);
@@ -89,18 +89,38 @@ public class Main {
 
         @Override
         public int compare(Object o1, Object o2) {
-        	// TODO: здесь можно условия if сделать, как в ObjectComparableWrapper в методе compareTo,
-			// TODO: либо переписать все на тернарные операторы
-            if (o1 instanceof Integer && !(o2 instanceof Integer)) {
-                return -1;
-            } else if (o1 instanceof Integer && o2 instanceof Integer) {
-                return ((Integer) o1).compareTo((Integer) o2);
-            } else if (o1 instanceof String && o2 instanceof String) {
-                return ((String) o1).compareTo((String) o2);
-            } else {
-                return 1;
-            }
+			if (o1 instanceof Integer && o2 instanceof Integer) {
+				return ((Integer) o1).compareTo((Integer) o2);
+			} else if (o1 instanceof String && o2 instanceof String) {
+				return ((String) o1).compareTo((String) o2);
+			} else if (!(o1 instanceof Integer) && !(o1 instanceof String) && !(o2 instanceof Integer) &&
+					   !(o2 instanceof String)) {
+				return 0;
+			} else {
+				return getOrderPriorityByClass(o1).compareTo(getOrderPriorityByClass(o2));
+			}
         }
+
+		/**
+		 * Получение приоритета порядка следования элементов для сортировки объектов классов Integer,
+		 *
+		 * String, других классов.
+		 * чем меньше результирующий Integer, тем раньше должен идти элемент.
+		 * @param o проверяемый объект.
+		 *
+		 *
+		 * @return приоритет порядка следования (чем меньше, тем раньше).
+		 */
+		private Integer getOrderPriorityByClass(Object o) {
+			switch (o.getClass().getSimpleName()) {
+			case "Integer":
+				return 0;
+			case "String":
+				return 1;
+			default:
+				return 2;
+			}
+		}
 
         @Override
         public boolean equals(Object obj) {
